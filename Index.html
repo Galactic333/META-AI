@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>// Replace the getAIResponse function with:
+async function getAIResponse(userMessage) {
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: userMessage })
+    });
+    const data = await response.json();
+    return data.reply;
+  } catch (error) {
+    return "Sorry, I'm having trouble connecting right now.";
+  }
+}</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta AI - Next Generation AI Assistant</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:%23ffffff;stop-opacity:0.1"/><stop offset="100%" style="stop-color:%23ffffff;stop-opacity:0"/></radialGradient></defs><circle cx="50" cy="50" r="50" fill="url(%23g)"/></svg>') repeat;
+            background-size: 200px 200px;
+            animation: floatParticles 20s linear infinite;
+            opacity: 0.1;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes floatParticles {
+            0% { transform: translateY(0px) translateX(0px); }
+            33% { transform: translateY(-100px) translateX(100px); }
+            66% { transform: translateY(-200px) translateX(-100px); }
+            100% { transform: translateY(-300px) translateX(0px); }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Home Page */
+        .home-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            padding-top: 120px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #b0b0b0;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-bottom: 4rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 4rem auto 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .feature-desc {
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+
+        /* Login Page */
+        .login-page {
+            display: none;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            padding-top: 120px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 3rem;
+            backdrop-filter: blur(20px);
+            max-width: 450px;
+            width: 100%;
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .login-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #b0b0b0;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #666;
+        }
+
+        /* Chat Page */
+        .chat-page {
+            display: none;
+            min-height: 100vh;
+            padding-top: 100px;
+        }
+
+        .chat-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+            height: calc(100vh - 120px);
+        }
+
+        .chat-main {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .chat-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .chat-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #4ade80;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: pulse 2s infinite;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .message {
+            margin-bottom: 1.5rem;
+            display: flex;
+            animation: messageSlide 0.4s ease-out;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 1.2rem 1.8rem;
+            border-radius: 25px;
+            position: relative;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 8px;
+        }
+
+        .message.ai .message-content {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-bottom-left-radius: 8px;
+        }
+
+        .chat-input-area {
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 1.2rem 1.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            color: white;
+            font-size: 1rem;
+            resize: none;
+            min-height: 50px;
+            max-height: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .chat-input::placeholder {
+            color: #666;
+        }
+
+        .send-button {
+            padding: 1.2rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .chat-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+        }
+
+        .sidebar-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            color: #b0b0b0;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #667eea;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ff6b6b;
+            padding: 0.8rem 1.5rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 107, 107, 0.1);
+            border-color: #ff6b6b;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .navbar {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <nav class="navbar" id="navbar">
+        <div class="nav-content">
+            <div class="logo">Meta AI</div>
+            <div class="nav-buttons" id="navButtons">
+                <button class="btn btn-secondary" onclick="showLogin()">Sign In</button>
+                <button class="btn btn-primary" onclick="showLogin()">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div class="home-page" id="homePage">
+        <div class="hero-content">
+            <h1 class="hero-title">The Future of AI is Here</h1>
+            <p class="hero-subtitle">Meta AI powered by DeepSeek delivers unprecedented intelligence for Roblox development, content creation, and beyond. Experience the next generation of AI assistance.</p>
+            
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="showLogin()">Start Creating</button>
+                <button class="btn btn-secondary" onclick="scrollToFeatures()">Learn More</button>
+            </div>
+        </div>
+
+        <div class="features-grid" id="features">
+            <div class="feature-card">
+                <div class="feature-icon">🎮</div>
+                <div class="feature-title">Roblox Mastery</div>
+                <div class="feature-desc">Advanced scripting assistance, game optimization, and creative guidance for your Roblox projects.</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎥</div>
+                <div class="feature-title">Content Creation</div>
+                <div class="feature-desc">Generate video ideas, thumbnails, and scripts tailored for YouTube success in the Roblox community.</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <div class="feature-title">DeepSeek Integration</div>
+                <div class="feature-desc">Harness the power of cutting-edge AI technology for complex problem-solving and creative tasks.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div class="login-page" id="loginPage">
+        <div class="login-container">
+            <h2 class="login-title">Welcome Back</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Email or Username</label>
+                    <input type="text" class="form-input" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    Access Meta AI
+                </button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-secondary" onclick="showHome()">← Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Page -->
+    <div class="chat-page" id="chatPage">
+        <div class="chat-container">
+            <div class="chat-main">
+                <div class="chat-header">
+                    <h2>Meta AI Assistant</h2>
+                    <div class="chat-status">
+                        <div class="status-dot"></div>
+                        Connected to DeepSeek
+                    </div>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai">
+                        <div class="message-content">
+                            Welcome to Meta AI! I'm your advanced AI assistant powered by DeepSeek technology. I'm here to help you with Roblox development, scripting, game design, YouTube content creation, and much more. What would you like to work on today?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="typing-indicator" id="typingIndicator">
+                    <span>Meta AI is thinking</span>
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-area">
+                    <div class="chat-input-container">
+                        <textarea class="chat-input" id="chatInput" placeholder="Ask me anything about Roblox, scripting, game development, or content creation..." rows="1"></textarea>
+                        <button class="send-button" id="sendButton" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-sidebar">
+                <div class="sidebar-card">
+                    <div class="user-info">
+                        <div class="avatar">M</div>
+                        <div>
+                            <div style="font-weight: 600;">MetaStreamz User</div>
+                            <div style="color: #b0b0b0; font-size: 0.9rem;">Premium Access</div>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">Sign Out</button>
+                </div>
+                
+                <div class="sidebar-card">
+                    <h3>Quick Actions</h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <button class="btn btn-secondary" style="padding: 0.8rem; font-size: 0.9rem;" onclick="quickMessage('Help me script a Roblox game')">🎮 Script Help</button>
+                        <button class="btn btn-secondary" style="padding: 0.8rem; font-size: 0.9rem;" onclick="quickMessage('Give me YouTube video ideas')">🎥 Video Ideas</button>
+                        <button class="btn btn-secondary" style="padding: 0.8rem; font-size: 0.9rem;" onclick="quickMessage('How do I optimize my Roblox game?')">⚡ Optimization</button>
+                    </div>
+                </div>
+                
+                <div class="sidebar-card">
+                    <h3>AI Capabilities</h3>
+                    <ul style="list-style: none; color: #b0b0b0; line-height: 1.8;">
+                        <li>✨ Advanced Lua Scripting</li>
+                        <li>🎨 UI/UX Design Tips</li>
+                        <li>📊 Game Analytics</li>
+                        <li>💰 Monetization Strategies</li>
+                        <li>🚀 Performance Optimization</li>
+                        <li>📱 Cross-Platform Development</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Page Navigation
+        function showHome() {
+            document.getElementById('homePage').style.display = 'flex';
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('chatPage').style.display = 'none';
+        }
+
+        function showLogin() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('chatPage').style.display = 'none';
+        }
+
+        function showChat() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('chatPage').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('chatInput').focus();
+            }, 100);
+        }
+
+        function scrollToFeatures() {
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            // Get form inputs
+            const email = event.target.querySelector('input[type="text"]').value;
+            const password = event.target.querySelector('input[type="password"]').value;
+            
+            // Basic validation
+            if (!email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Signing In...';
+            submitBtn.disabled = true;
+            
+            // Simulate login process
+            setTimeout(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                showChat();
+            }, 1000);
+        }
+
+        function logout() {
+            showHome();
+        }
+
+        // Chat Functionality
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        // Enhanced AI Responses
+        const aiResponses = {
+            roblox: [
+                "Roblox development is exciting! I can help you with scripting, building, game mechanics, or monetization strategies. What specific aspect of your project needs attention?",
+                "Great! For Roblox development, I recommend starting with a clear game concept. Are you working on gameplay mechanics, user interface, or perhaps server-side scripting?",
+                "Roblox offers incredible possibilities! Whether you need help with Lua scripting, 3D modeling, or game optimization, I'm here to guide you through every step."
+            ],
+            script: [
+                "Lua scripting in Roblox is powerful! Here's a tip: always use proper variable scoping and event handling. What type of script are you trying to create - LocalScript, ServerScript, or ModuleScript?",
+                "For scripting help, I can assist with everything from basic part manipulation to complex game systems. Are you working on player mechanics, GUI systems, or data storage?",
+                "Scripting best practices include: commenting your code, using proper naming conventions, and implementing error handling. What's your current scripting challenge?"
+            ],
+            youtube: [
+                "YouTube content creation for Roblox is huge! Consider trending topics like game reviews, building tutorials, scripting lessons, or showcase videos. What's your content niche?",
+                "For successful Roblox YouTube content, focus on: engaging thumbnails, clear audio, entertaining gameplay, and community interaction. What type of videos do you want to create?",
+                "MetaStreamz knows the YouTube game! Popular Roblox content includes: tutorials, funny moments, game challenges, and building showcases. What's your unique angle?"
+            ],
+            deepseek: [
+                "My DeepSeek integration provides advanced reasoning and problem-solving capabilities! I can help with complex coding challenges, creative brainstorming, and detailed analysis.",
+                "With DeepSeek's power, I can offer sophisticated solutions for game development, content strategy, and technical challenges. What complex problem can I help you solve?",
+                "DeepSeek technology enables me to understand context deeply and provide nuanced assistance. Whether it's advanced scripting or creative direction, I'm ready to help!"
+            ],
+            default: [
+                "That's an interesting question! I'm here to help with Roblox development, YouTube content creation, scripting, and creative projects. Could you provide more details?",
+                "I'd love to assist you with that! My expertise covers game development, content creation, and technical problem-solving. What specific help do you need?",
+                "Great question! I can help with a wide range of topics from Roblox scripting to content strategy. What would you like to explore together?"
+            ]
+        };
+
+        function getAIResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            if (message.includes('roblox') || message.includes('game')) {
+                return aiResponses.roblox[Math.floor(Math.random() * aiResponses.roblox.length)];
+            } else if (message.includes('script') || message.includes('code') || message.includes('lua')) {
+                return aiResponses.script[Math.floor(Math.random() * aiResponses.script.length)];
+            } else if (message.includes('youtube') || message.includes('video') || message.includes('content')) {
+                return aiResponses.youtube[Math.floor(Math.random() * aiResponses.youtube.length)];
+            } else if (message.includes('deepseek') || message.includes('ai')) {
+                return aiResponses.deepseek[Math.floor(Math.random() * aiResponses.deepseek.length)];
+            } else if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+                return "Hello! I'm Meta AI, your advanced assistant powered by DeepSeek technology. I'm here to help you with Roblox development, content creation, and much more. How can I assist you today?";
+            } else if (message.includes('metastreamz')) {
+                return "MetaStreamz is an amazing Roblox YouTuber! I'm designed to help creators like you build better games, create engaging content, and grow your audience. What project are you working on?";
+            } else {
+                return aiResponses.default[Math.floor(Math.random() * aiResponses.default.length)];
+            }
+        }
+
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.textContent = content;
+            
+            messageDiv.appendChild(messageContent);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            typingIndicator.style.display = 'flex';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            typingIndicator.style.display = 'none';
+        }
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, true);
+            chatInput.value = '';
+            sendButton.disabled = true;
+            
+            // Auto-resize textarea
+            chatInput.style.height = 'auto';
+
+            showTypingIndicator();
+
+            // Simulate AI response delay
+            setTimeout(() => {
+                hideTypingIndicator();
+                const aiResponse = getAIResponse(message);
+                addMessage(aiResponse);
+                sendButton.disabled = false;
+                chatInput.focus();
+            }, 1500 + Math.random() * 2000);
+        }
+
+        function quickMessage(message) {
+            chatInput.value = message;
+            sendMessage();
+        }
+
+        // Auto-resize textarea
+        chatInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Enter to send message
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!sendButton.disabled) {
+                    sendMessage();
+                }
+            }
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+            } else {
+                navbar.style.background = 'rgba(10, 10, 10, 0.8)';
+            }
+        });
+
+        // Initialize
+        showHome();
+    </script>
+</body>
+</html>
